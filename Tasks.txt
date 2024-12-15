@@ -1,0 +1,12 @@
+1. Change data - OK
+    - Filter by Year
+    - Match the code of country
+2. Legend color bar - OK
+3. Year Change - OK
+4. Color Change - Ok
+5. Tooltip Change - OK
+6. hover change duration (too slow). - OK
+7. Draw the line chart for each hovering.
+8. Modify all styles
+9. Choose the title again
+10. Show the tooltip all the time

@@ -1,0 +1,95 @@
+body {
+    background-color: #F2F3F6;
+    min-height: 100%;
+    font-family: "Verdana", sans-serif;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+h1 {
+    margin: 0;
+    font-size: 20px;
+    text-align: center;
+}
+
+#legend {
+    font-size: 0.7em;
+    letter-spacing: 0.1;
+}
+
+.map {
+    padding: 20px;
+    background-color: #FFFFFF;
+}
+
+.tooltip {
+    position: absolute;
+    padding: 15px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    pointer-events: none;
+    z-index: 1000;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.tooltip:hover {
+    transform: scale(1.02); /* Slight zoom effect */
+}
+
+
+.background {
+    fill: transparent;
+}
+
+.world {
+    transform-origin: center;
+}
+
+.color-bar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.color-bar-container svg {
+    margin: 0 auto;
+}
+
+.legend rect {
+    stroke: #ccc;
+    stroke-width: 1px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.legend text {
+    font-size: 12px;
+    fill: #333;
+    cursor: default;
+}
+
+
+/* Title */
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333; /* Dark Gray */
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 1.2px; /* Slight spacing for readability */
+    text-transform: capitalize;
+    border-bottom: 2px solid #555; /* Subtle underline */
+    padding-bottom: 10px;
+}
+
