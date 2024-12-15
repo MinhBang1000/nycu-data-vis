@@ -12,23 +12,19 @@
 
 <body>
     <div id="root">
-        <h1 class="title">
-            <!-- Put the code here -->
-        </h1>
         <div class="svg-container">
-            <svg id="my_dataviz" width="800" height="450"></svg>
+            <svg id="my_dataviz"></svg>
         </div>
         <!-- Color bar -->
         <div class="color-bar-container">
             <!-- Put the code here -->
         </div>
         <!-- Slider for selecting the year -->
-        <div class="slider-container" style="margin-top: 20px; text-align: center;">
-            <label for="year-slider" style="font-size: 14px; margin-right: 10px;">Select Year:</label>
+        <div class="slider-container" style="text-align: center;">
             <span id="min-year">1950</span>
             <input type="range" id="year-slider" min="1950" max="2100" value="2024" step="1"
                 style="margin: 0 10px; width: 300px;" />
-            <span id="current-year">2023</span>
+            <span id="current-year">2023</span> 
         </div>
     </div>
     <script src="https://d3js.org/d3.v7.min.js"></script>

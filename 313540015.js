@@ -1,8 +1,13 @@
 // initial setup
-const svg = d3.select("svg"),
-    width = svg.attr("width"),
-    height = svg.attr("height"),
-    path = d3.geoPath(),
+const svg = d3.select("svg")
+    .attr("viewBox", "0 0 800 400") // Set the viewBox for scaling
+    .attr("preserveAspectRatio", "xMidYMid meet"); // Maintain aspect ratio
+
+const width = 800
+const height = 400
+
+
+const path = d3.geoPath(),
     data = new Map(),
     worldmap = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson",
     worldpopulation = "https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world_population.csv",
@@ -11,7 +16,7 @@ const svg = d3.select("svg"),
 let centered, world;
 const projection = d3.geoRobinson().
     scale(130).
-    translate([width / 2, height / 2]);
+    translate([300, 200]);
 
 // Define color scale
 // const colorScale = d3.scaleThreshold().
@@ -42,23 +47,10 @@ year = 2023
 const slider = document.getElementById('year-slider');
 const currentYearDisplay = document.getElementById('current-year');
 
-// Select the title element
-const titleElement = d3.select(".title");
-
-// Function to update the title dynamically
-function updateTitle(selectedYear) {
-    const titleText = `World Population Density Map - Year ${selectedYear}`;
-    titleElement.text(titleText);
-}
-
-// Initialize the title with the default year
-updateTitle(slider.value);
-
 // Event listener for the slider
 slider.addEventListener('input', function () {
     year = +slider.value; // Update the global year variable
     currentYearDisplay.textContent = year; // Update the displayed year
-    updateTitle(year); // Update the title dynamically
     updateMapForYear(year); // Call a function to update the map
 });
 
@@ -88,8 +80,6 @@ function updateMapForYear(selectedYear) {
 // Add clickable background
 svg.append("rect").
     attr("class", "background").
-    attr("width", width).
-    attr("height", height).
     on("click", click);
 
 // ----------------------------
@@ -148,7 +138,7 @@ function ready(error, topo) {
 
     // Draw the map
     world = svg.append("g")
-        .attr("class", "world");
+        .attr("class", "world")
 
     world.selectAll("path")
         .data(topo.features)
@@ -214,16 +204,24 @@ function click(d) {
 
 function createLegendBar() {
     const legendData = [
-        { color: "#a8ddb5", label: "1-10 people/km²", range: [1, 10] },
-        { color: "#7bccc4", label: "10-100 people/km²", range: [10, 100] },
-        { color: "#4eb3d3", label: "100-1000 people/km²", range: [100, 1000] },
-        { color: "#2b8cbe", label: "1000-5000 people/km²", range: [1000, 5000] },
-        { color: "#0868ac", label: ">5000 people/km²", range: [5000, Infinity] },
+        { color: "#a8ddb5", label: "1-10", range: [1, 10] },
+        { color: "#7bccc4", label: "10-100", range: [10, 100] },
+        { color: "#4eb3d3", label: "100-1k", range: [100, 1000] },
+        { color: "#2b8cbe", label: "1k-5k", range: [1000, 5000] },
+        { color: "#0868ac", label: ">5k", range: [5000, Infinity] },
     ];
+
+    // const legendData = [
+    //     { color: "#a8ddb5", label: "1-10 people/km²", range: [1, 10] },
+    //     { color: "#7bccc4", label: "10-100 people/km²", range: [10, 100] },
+    //     { color: "#4eb3d3", label: "100-1000 people/km²", range: [100, 1000] },
+    //     { color: "#2b8cbe", label: "1000-5000 people/km²", range: [1000, 5000] },
+    //     { color: "#0868ac", label: ">5000 people/km²", range: [5000, Infinity] },
+    // ];
 
     const container = d3.select(".color-bar-container");
 
-    const legendWidth = 700;
+    const legendWidth = 400;
     const legendHeight = 50;
     const blockWidth = legendWidth / legendData.length;
 
@@ -246,16 +244,17 @@ function createLegendBar() {
     legend
         .append("rect")
         .attr("width", blockWidth - 2) // Add spacing between blocks
-        .attr("height", 20)
+        .attr("height", 10)
         .attr("fill", (d) => d.color);
 
-    // Append labels below each block
+    // Append labels below each block   
     legend
         .append("text")
         .attr("x", blockWidth / 2)
-        .attr("y", 35)
+        .attr("y", 28)
         .attr("text-anchor", "middle")
-        .style("font-size", "12px")
+        .style("font-size", "14px")
+        .style("font-weight", "bold")
         .text((d) => d.label);
 
     // Highlight countries corresponding to the range on hover
@@ -289,6 +288,7 @@ Promise.all([
 ])
     .then(([geojson]) => {
         ready(null, geojson);
+        // Call the fitMapToSVG function to ensure the map fits the SVG
         createLegendBar(); // Add the legend bar
     })
     .catch((error) => {
