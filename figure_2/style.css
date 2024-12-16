@@ -40,3 +40,33 @@ svg {
     font-size: 12px;
     opacity: 0;
 }
+
+#year-slider-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+#year-slider {
+    flex: 1;
+    margin: 0 10px;
+    appearance: none;
+    height: 6px;
+    background: #ddd;
+    outline: none;
+    border-radius: 3px;
+}
+
+#year-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#year-display {
+    font-weight: bold;
+}

@@ -15,20 +15,10 @@ const g = svg.append("g")
 const tooltip = d3.select("body").append("div")
     .attr("class", "tooltip");
 
-// Load Data
-d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
-    // Filter dataset for a specific year (2023 as an example)
-    const filteredData = data.filter(d => d.Year === "2023");
+// Function to update the chart based on year
+function updateChart(data, year) {
+    const filteredData = data.filter(d => d.Year === year);
 
-    // Parse and calculate rates
-    filteredData.forEach(d => {
-        d.birthRate = +d["Birth rate - Sex: all - Age: all - Variant: estimates"];
-        d.deathRate = +d["Death rate - Sex: all - Age: all - Variant: estimates"];
-        d.population = +d["Population - Sex: all - Age: all - Variant: estimates"];
-        d.country = d.Entity;
-    });
-
-    // Scales
     const x = d3.scaleLinear()
         .domain([0, d3.max(filteredData, d => d.deathRate)])
         .range([0, width]);
@@ -38,43 +28,61 @@ d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
         .range([height, 0]);
 
     const sizeScale = d3.scaleSqrt()
-        .domain([d3.min(filteredData, d => d.population), d3.max(filteredData, d => d.population)])
-        .range([4, 50]); // Scale bubble size based on population
+        .domain(d3.extent(filteredData, d => d.population))
+        .range([4, 50]);
 
     const color = d3.scaleOrdinal()
-        .domain(filteredData.map(d => d["World regions according to OWID"])) // Regions as domain
-        .range(d3.schemeSet2);
+        .domain(["Africa", "Asia", "Europe", "North America", "Oceania", "South America"])
+        .range(["#FF9AA2", "#FFB347", "#B5EAD7", "#C7CEEA", "#FFDAC1", "#9DE0AD"]);
 
-    // Axes
+    // Update axes
+    g.selectAll(".x-axis").remove();
+    g.selectAll(".y-axis").remove();
+
     g.append("g")
+        .attr("class", "x-axis")
         .attr("transform", `translate(0, ${height})`)
-        .call(d3.axisBottom(x).ticks(5)); // Set X-axis ticks to 5
+        .call(d3.axisBottom(x).ticks(5));
 
     g.append("g")
-        .call(d3.axisLeft(y).ticks(5)); // Set Y-axis ticks to 5
+        .attr("class", "y-axis")
+        .call(d3.axisLeft(y).ticks(5));
 
-    // Gray diagonal line
-    g.append("line")
-        .attr("x1", 0).attr("y1", height)
-        .attr("x2", width).attr("y2", 0)
-        .style("stroke", "gray")
-        .style("stroke-dasharray", "5,5");
+    // Bind data and update bubbles
+    const bubbles = g.selectAll(".bubbles")
+        .data(filteredData, d => d.Entity); // Use key function for unique countries
 
-    // Bubbles
-    g.selectAll(".bubbles")
-        .data(filteredData)
-        .enter()
+    // ENTER new bubbles
+    const bubblesEnter = bubbles.enter()
         .append("circle")
         .attr("class", "bubbles")
         .attr("cx", d => x(d.deathRate))
         .attr("cy", d => y(d.birthRate))
-        .attr("r", d => sizeScale(d.population)) // Scale bubble size by population
+        .attr("r", 0) // Start with 0 radius for transition
         .style("fill", d => color(d["World regions according to OWID"]))
-        .style("opacity", 0.7)
+        .style("opacity", 0.7);
+
+    // MERGE (ENTER + UPDATE)
+    bubblesEnter.merge(bubbles)
+        .transition()
+        .duration(500)
+        .attr("cx", d => x(d.deathRate))
+        .attr("cy", d => y(d.birthRate))
+        .attr("r", d => sizeScale(d.population));
+
+    // EXIT old bubbles
+    bubbles.exit()
+        .transition()
+        .duration(500)
+        .attr("r", 0) // Shrink radius to 0
+        .remove();
+
+    // Add tooltip functionality
+    g.selectAll(".bubbles")
         .on("mouseover", (event, d) => {
             tooltip.style("opacity", 1)
                 .html(`
-                    <strong>Country:</strong> ${d.country}<br>
+                    <strong>Country:</strong> ${d.Entity}<br>
                     <strong>Birth Rate:</strong> ${d.birthRate} per 1,000<br>
                     <strong>Death Rate:</strong> ${d.deathRate} per 1,000<br>
                     <strong>Population:</strong> ${d.population.toLocaleString()}
@@ -89,4 +97,29 @@ d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
         .on("mouseout", () => {
             tooltip.style("opacity", 0);
         });
+}
+
+
+// Load data and initialize slider
+d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
+    data.forEach(d => {
+        d.birthRate = +d["Birth rate - Sex: all - Age: all - Variant: estimates"];
+        d.deathRate = +d["Death rate - Sex: all - Age: all - Variant: estimates"];
+        d.population = +d["Population - Sex: all - Age: all - Variant: estimates"];
+        d.Year = d.Year; // Ensure Year is a string for matching slider input
+    });
+
+    const yearSlider = d3.select("#year-slider");
+    const yearDisplay = d3.select("#year-display");
+
+    // Initialize chart with default year (slider's initial value)
+    let currentYear = yearSlider.property("value");
+    updateChart(data, currentYear);
+
+    // Update chart when slider value changes
+    yearSlider.on("input", function () {
+        currentYear = this.value;
+        yearDisplay.text(currentYear);
+        updateChart(data, currentYear);
+    });
 });
