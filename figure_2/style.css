@@ -70,3 +70,15 @@ svg {
 #year-display {
     font-weight: bold;
 }
+
+/* Add this for larger axis ticks and numbers */
+.x-axis text, .y-axis text {
+    font-size: 16px; /* Larger font size for axis numbers */
+    font-weight: bold;
+    fill: black; /* Axis tick color */
+}
+
+.x-axis path, .y-axis path, .x-axis line, .y-axis line {
+    stroke-width: 1.5px; /* Thicker axis lines */
+    stroke: #333; /* Darker axis color */
+}

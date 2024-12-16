@@ -1,12 +1,11 @@
-const margin = { top: 30, right: 40, bottom: 50, left: 60 };
+const margin = { top: 20, right: 120, bottom: 40, left: 60 }; // Adjust margins for a smaller chart
 
-// Append SVG with responsive properties
 const svg = d3.select("#chart")
-    .attr("viewBox", `0 0 800 600`) // Responsive scaling
-    .attr("preserveAspectRatio", "xMidYMid meet"); // Maintains aspect ratio
+    .attr("viewBox", `0 0 700 450`) // Preserve aspect ratio with reduced height
+    .attr("preserveAspectRatio", "xMidYMid meet"); // Maintain responsiveness
 
-const width = 800 - margin.left - margin.right;
-const height = 600 - margin.top - margin.bottom;
+const width = 700 - margin.left - margin.right; // Keep chart width consistent
+const height = 450 - margin.top - margin.bottom; // Reduce chart height proportionally
 
 const g = svg.append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -35,6 +34,59 @@ function updateChart(data, year) {
         .domain(["Africa", "Asia", "Europe", "North America", "Oceania", "South America"])
         .range(["#FF9AA2", "#FFB347", "#B5EAD7", "#C7CEEA", "#FFDAC1", "#9DE0AD"]);
 
+    // Add Legend
+    g.selectAll(".legend").remove(); // Remove existing legend to avoid duplication
+
+    const legend = g.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(${width + 40}, 20)`); // Shift the legend closer
+
+
+    const legendData = ["Africa", "Asia", "Europe", "North America", "Oceania", "South America"];
+
+    legend.selectAll("legend-dot")
+        .data(legendData)
+        .enter()
+        .append("circle")
+        .attr("class", "legend-dot")
+        .attr("cx", 0)
+        .attr("cy", (d, i) => i * 25) // Space out legend items
+        .attr("r", 8)
+        .style("fill", d => color(d))
+        .style("opacity", 0.7)
+        .on("mouseover", (event, d) => {
+            // Highlight only the bubbles that match the region
+            g.selectAll(".bubbles")
+                .style("opacity", b => b["World regions according to OWID"] === d ? 1 : 0.1);
+        })
+        .on("mouseout", () => {
+            // Reset bubble opacity
+            g.selectAll(".bubbles")
+                .style("opacity", 0.7);
+        });
+
+    legend.selectAll("legend-label")
+        .data(legendData)
+        .enter()
+        .append("text")
+        .attr("class", "legend-label")
+        .attr("x", 15)
+        .attr("y", (d, i) => i * 25 + 5)
+        .style("fill", "black")
+        .style("font-size", "12px")
+        .text(d => d)
+        .on("mouseover", (event, d) => {
+            // Highlight only the bubbles that match the region
+            g.selectAll(".bubbles")
+                .style("opacity", b => b["World regions according to OWID"] === d ? 1 : 0.1);
+        })
+        .on("mouseout", () => {
+            // Reset bubble opacity
+            g.selectAll(".bubbles")
+                .style("opacity", 0.7);
+        });
+
+
     // Update axes
     g.selectAll(".x-axis").remove();
     g.selectAll(".y-axis").remove();
@@ -47,6 +99,74 @@ function updateChart(data, year) {
     g.append("g")
         .attr("class", "y-axis")
         .call(d3.axisLeft(y).ticks(5));
+
+    // Add X-axis Label
+    g.selectAll(".x-axis-label").remove(); // Remove previous labels
+    g.append("text")
+        .attr("class", "x-axis-label")
+        .attr("x", width / 2)
+        .attr("y", height + margin.bottom) // Position below the X-axis
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .style("fill", "black")
+        .text("Deaths per 1,000");
+
+    // Add Y-axis Label
+    g.selectAll(".y-axis-label").remove(); // Remove previous labels
+    g.append("text")
+        .attr("class", "y-axis-label")
+        .attr("transform", "rotate(-90)") // Rotate for vertical orientation
+        .attr("x", -height / 2)
+        .attr("y", -margin.left + 20) // Position to the left of the Y-axis
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .style("fill", "black")
+        .text("Births per 1,000");
+
+
+    // Add the gray diagonal line (Birth Rate = Death Rate)
+    g.selectAll(".gray-line").remove(); // Remove existing line to prevent duplication
+
+    g.append("line")
+        .attr("class", "gray-line")
+        .attr("x1", 0)
+        .attr("y1", height)
+        .attr("x2", width)
+        .attr("y2", 0)
+        .style("stroke", "gray")
+        .style("stroke-width", 2)
+        .style("stroke-dasharray", "5,5"); // Dashed line for better clarity
+
+
+    // Add gridlines for X-axis
+    g.selectAll(".grid-x").remove(); // Remove existing gridlines to prevent duplication
+    g.append("g")
+        .attr("class", "grid-x")
+        .attr("transform", `translate(0, ${height})`)
+        .call(
+            d3.axisBottom(x)
+                .tickSize(-height) // Extend gridlines to chart height
+                .tickFormat("") // Remove tick labels for the gridlines
+        )
+        .selectAll("line")
+        .style("stroke", "#ddd") // Light gray color
+        .style("stroke-width", 1)
+        .style("opacity", 0.7); // Faint appearance
+
+    // Add gridlines for Y-axis
+    g.selectAll(".grid-y").remove(); // Remove existing gridlines to prevent duplication
+    g.append("g")
+        .attr("class", "grid-y")
+        .call(
+            d3.axisLeft(y)
+                .tickSize(-width) // Extend gridlines to chart width
+                .tickFormat("") // Remove tick labels for the gridlines
+        )
+        .selectAll("line")
+        .style("stroke", "#ddd") // Light gray color
+        .style("stroke-width", 1)
+        .style("opacity", 0.7); // Faint appearance
+
 
     // Bind data and update bubbles
     const bubbles = g.selectAll(".bubbles")
