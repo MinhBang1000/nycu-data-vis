@@ -28,11 +28,23 @@ function updateChart(data, year) {
 
     const sizeScale = d3.scaleSqrt()
         .domain(d3.extent(filteredData, d => d.population))
-        .range([4, 50]);
+        .range([3, 30]); // Slightly larger range for better visibility
+
+
+
+    // const color = d3.scaleOrdinal()
+    //     .domain(["Africa", "Asia", "Europe", "North America", "Oceania", "South America"])
+    //     .range(["#FF9AA2", "#FFB347", "#B5EAD7", "#C7CEEA", "#FFDAC1", "#9DE0AD"]);
+
+    // const color = d3.scaleOrdinal()
+    //     .domain(["Africa", "Asia", "Europe", "North America", "Oceania", "South America"])
+    //     .range(["#E63946", "#F1FAEE", "#A8DADC", "#457B9D", "#1D3557", "#F4A261"]);
 
     const color = d3.scaleOrdinal()
         .domain(["Africa", "Asia", "Europe", "North America", "Oceania", "South America"])
-        .range(["#FF9AA2", "#FFB347", "#B5EAD7", "#C7CEEA", "#FFDAC1", "#9DE0AD"]);
+        .range(["#8E44AD", "#3498DB", "#2ECC71", "#F39C12", "#E74C3C", "#16A085"]);
+
+
 
     // Add Legend
     g.selectAll(".legend").remove(); // Remove existing legend to avoid duplication
@@ -217,12 +229,44 @@ function updateChart(data, year) {
         .on("mouseout", () => {
             tooltip.style("opacity", 0);
         });
+
+
+    // Add country names for bubbles with the largest populations
+    g.selectAll(".country-label").remove(); // Remove old labels
+
+    g.selectAll(".country-label")
+        .data(filteredData
+            .sort((a, b) => b.population - a.population) // Sort by population (descending)
+            .slice(0, 10) // Show only top 10 countries
+        )
+        .enter()
+        .append("text")
+        .attr("class", "country-label")
+        .attr("x", d => x(d.deathRate) + 8) // Slightly offset to the right
+        .attr("y", d => y(d.birthRate) + 4) // Adjust for vertical alignment
+        .style("font-size", "14px") // Smaller font size
+        .style("font-weight", "bold")
+        .style("fill", d => d3.color(color(d["World regions according to OWID"])).darker(1)) // Match bubble color, darker
+        .style("stroke", "black") // Add border for contrast
+        .style("stroke-width", "0.5px")
+        .style("pointer-events", "none") // Avoid blocking tooltips
+        .text(d => d.Entity);
+
 }
 
 
 // Load data and initialize slider
 d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
-    data.forEach(d => {
+    // Filter out group entities and keep only individual countries
+    const filteredData = data.filter(d => !d.Entity.includes("countries")
+        && !d.Entity.includes("regions")
+        && !d.Entity.includes("income")
+        && !d.Entity.includes("developed")
+        && !d.Entity.includes("UN") // Exclude group names
+        && !d.Entity.includes("World")); // Exclude group names
+
+    // Convert necessary fields to numeric values
+    filteredData.forEach(d => {
         d.birthRate = +d["Birth rate - Sex: all - Age: all - Variant: estimates"];
         d.deathRate = +d["Death rate - Sex: all - Age: all - Variant: estimates"];
         d.population = +d["Population - Sex: all - Age: all - Variant: estimates"];
@@ -234,12 +278,13 @@ d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
 
     // Initialize chart with default year (slider's initial value)
     let currentYear = yearSlider.property("value");
-    updateChart(data, currentYear);
+    updateChart(filteredData, currentYear);
 
     // Update chart when slider value changes
     yearSlider.on("input", function () {
         currentYear = this.value;
         yearDisplay.text(currentYear);
-        updateChart(data, currentYear);
+        updateChart(filteredData, currentYear);
     });
 });
+
