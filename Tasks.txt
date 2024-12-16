@@ -8,3 +8,10 @@ Figure 2:
 - Grid dash
 
 Figure 3:
+- Hover Legend
+- Hover line --- Tooltip
+- 
+
+
+
+# Should visual to 2100
