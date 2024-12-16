@@ -6,3 +6,5 @@ Figure 2:
 - Change Year
 - Five ticks
 - Grid dash
+
+Figure 3:
