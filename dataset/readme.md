@@ -1,6 +1,6 @@
-# Population density - Data package
+# Births and deaths per year - Data package
 
-This data package contains the data that powers the chart ["Population density"](https://ourworldindata.org/grapher/population-density?v=1&csvType=full&useColumnShortNames=false) on the Our World in Data website. It was downloaded on November 18, 2024.
+This data package contains the data that powers the chart ["Births and deaths per year"](https://ourworldindata.org/grapher/births-and-deaths-projected-to-2100?v=1&csvType=full&useColumnShortNames=false) on the Our World in Data website.
 
 ## CSV Structure
 
@@ -10,7 +10,7 @@ The first two columns in the CSV file are "Entity" and "Code". "Entity" is the n
 
 The third column is either "Year" or "Day". If the data is annual, this is "Year" and contains only the year as an integer. If the column is "Day", the column contains a date string in the form "YYYY-MM-DD".
 
-The final column is the data column, which is the time series that powers the chart. If the CSV data is downloaded using the "full data" option, then the column corresponds to the time series below. If the CSV data is downloaded using the "only selected data visible in the chart" option then the data column is transformed depending on the chart type and thus the association with the time series might not be as straightforward.
+The remaining columns are the data columns, each of which is a time series. If the CSV data is downloaded using the "full data" option, then each column corresponds to one time series below. If the CSV data is downloaded using the "only selected data visible in the chart" option then the data columns are transformed depending on the chart type and thus the association with the time series might not be as straightforward.
 
 ## Metadata.json structure
 
@@ -20,66 +20,115 @@ The .metadata.json file contains metadata about the data package. The "charts" k
 
 Our World in Data is almost never the original producer of the data - almost all of the data we use has been compiled by others. If you want to re-use data, it is your responsibility to ensure that you adhere to the sources' license and to credit them correctly. Please note that a single time series may have more than one source - e.g. when we stich together data from different time periods by different producers or when we calculate per capita metrics using population data from a second source.
 
-## Detailed information about the data
+### How we process data at Our World In Data
+All data and visualizations on Our World in Data rely on data sourced from one or several original data providers. Preparing this original data involves several processing steps. Depending on the data, this can include standardizing country names and world region definitions, converting units, calculating derived indicators such as per capita measures, as well as adding or adapting metadata such as the name or the description given to an indicator.
+[Read about our data pipeline](https://docs.owid.io/projects/etl/)
+
+## Detailed information about each time series
 
 
-## Population density
-Population per square kilometer by country, available from 10,000 BCE to 2100, based on data and estimates from different sources.
-
-Last updated: July 15, 2024  
-Next update: July 2026  
-Date range: 10000 BCE – 2100 CE  
-Unit: people per km²  
+## Number of deaths,total – UN WPP
+Number of deaths recorded annually, based on the civil calendar year, spanning from January 1 to December 31.
+Last updated: July 12, 2024  
+Date range: 1950–2023  
+Unit: deaths  
 
 
 ### How to cite this data
 
 #### In-line citation
 If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
-HYDE (2023); Gapminder (2022); UN WPP (2024); UN FAO (2024) – with major processing by Our World in Data
+UN, World Population Prospects (2024) – processed by Our World in Data
 
 #### Full citation
-HYDE (2023); Gapminder (2022); UN WPP (2024); UN FAO (2024) – with major processing by Our World in Data. “Population density” [dataset]. PBL Netherlands Environmental Assessment Agency, “History Database of the Global Environment 3.3”; Gapminder, “Population v7”; United Nations, “World Population Prospects”; Gapminder, “Systema Globalis”; Food and Agriculture Organization of the United Nations, “Land, Inputs and Sustainability: Land Use” [original data].
-Source: HYDE (2023); Gapminder (2022); UN WPP (2024); UN FAO (2024) – with major processing by Our World In Data
+UN, World Population Prospects (2024) – processed by Our World in Data. “Number of deaths,total – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+Source: UN, World Population Prospects (2024) – processed by Our World In Data
 
 ### What you should know about this data
 
-### Sources
-
-#### PBL Netherlands Environmental Assessment Agency – History Database of the Global Environment
-Retrieved on: 2024-01-02  
-Retrieved from: https://doi.org/10.24416/UU01-AEZZIT  
-
-#### Gapminder – Population
-Retrieved on: 2023-03-31  
-Retrieved from: http://gapm.io/dpop  
+### Source
 
 #### United Nations – World Population Prospects
 Retrieved on: 2024-07-11  
 Retrieved from: https://population.un.org/wpp/Download/  
 
-#### Gapminder – Systema Globalis
-Retrieved on: 2023-03-31  
-Retrieved from: https://github.com/open-numbers/ddf--gapminder--systema_globalis  
 
-#### Food and Agriculture Organization of the United Nations – Land, Inputs and Sustainability: Land Use
-Retrieved on: 2024-03-14  
-Retrieved from: http://www.fao.org/faostat/en/#data/RL  
+## Number of deaths,medium projection – UN WPP
+Number of deaths recorded annually, based on the civil calendar year, spanning from January 1 to December 31.Projections from 2024 onwards are based on the UN's medium scenario.
+Last updated: July 12, 2024  
+Date range: 2024–2100  
+Unit: deaths  
 
-#### Notes on our processing step for this indicator
-We have estimated the population density by using population estimates from multiple sources and land area estimates by the Food and Agriculture Organization of the United Nations.
 
-We obtain it by dividing the population estimates by the land area estimates.
+### How to cite this data
 
-The population data is constructed by combining data from multiple sources:
+#### In-line citation
+If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
+UN, World Population Prospects (2024) – processed by Our World in Data
 
-- 10,000 BCE - 1799: Historical estimates by HYDE (v3.3).
+#### Full citation
+UN, World Population Prospects (2024) – processed by Our World in Data. “Number of deaths,medium projection – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+Source: UN, World Population Prospects (2024) – processed by Our World In Data
 
-- 1800 - 1949: Historical estimates by Gapminder (v7).
+### What you should know about this data
 
-- 1950-2023: Population records by the UN World Population Prospects (2024 revision).
+### Source
 
-- 2024-2100: Projections based on Medium variant by the UN World Population Prospects (2024 revision).
+#### United Nations – World Population Prospects
+Retrieved on: 2024-07-11  
+Retrieved from: https://population.un.org/wpp/Download/  
+
+
+## Births,total – UN WPP
+Number of births recorded annually, based on the civil calendar year, spanning from January 1 to December 31.
+Last updated: July 12, 2024  
+Date range: 1950–2023  
+Unit: births  
+
+
+### How to cite this data
+
+#### In-line citation
+If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
+UN, World Population Prospects (2024) – processed by Our World in Data
+
+#### Full citation
+UN, World Population Prospects (2024) – processed by Our World in Data. “Births,total – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+Source: UN, World Population Prospects (2024) – processed by Our World In Data
+
+### What you should know about this data
+
+### Source
+
+#### United Nations – World Population Prospects
+Retrieved on: 2024-07-11  
+Retrieved from: https://population.un.org/wpp/Download/  
+
+
+## Births,medium projection – UN WPP
+Number of births recorded annually, based on the civil calendar year, spanning from January 1 to December 31.Projections from 2024 onwards are based on the UN's medium scenario.
+Last updated: July 12, 2024  
+Date range: 2024–2100  
+Unit: births  
+
+
+### How to cite this data
+
+#### In-line citation
+If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
+UN, World Population Prospects (2024) – processed by Our World in Data
+
+#### Full citation
+UN, World Population Prospects (2024) – processed by Our World in Data. “Births,medium projection – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+Source: UN, World Population Prospects (2024) – processed by Our World In Data
+
+### What you should know about this data
+
+### Source
+
+#### United Nations – World Population Prospects
+Retrieved on: 2024-07-11  
+Retrieved from: https://population.un.org/wpp/Download/  
 
 
     

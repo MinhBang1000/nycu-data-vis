@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: white;
+}
+
+#chart-container {
+    width: 90%;
+    max-width: 800px;
+    aspect-ratio: 4 / 3; /* Maintains proportional scaling */
+}
+
+svg {
+    width: 100%;
+    height: 100%;
+}
+
+.bubbles {
+    stroke: white;
+    stroke-width: 2px;
+    transition: stroke 0.3s ease;
+}
+
+.bubbles:hover {
+    stroke: black;
+}
+
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    padding: 6px;
+    pointer-events: none;
+    font-size: 12px;
+    opacity: 0;
+}
