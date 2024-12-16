@@ -11,13 +11,23 @@ const svg = d3.select("#chart")
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
+// Create a tooltip div
+const tooltip = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("background", "#ffffff")
+    .style("border", "1px solid #ccc")
+    .style("padding", "10px")
+    .style("border-radius", "5px")
+    .style("pointer-events", "none")
+    .style("display", "none");
+
 // Load the CSV file
 d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
     // Parse the data
     data.forEach(d => {
         d.Year = +d.Year;
         d.FertilityEstimate = +d["Fertility rate - Sex: all - Age: all - Variant: estimates"];
-        d.FertilityProjection = +d["Fertility rate - Sex: all - Age: all - Variant: medium"];
     });
 
     // Group the data by entity
@@ -29,7 +39,7 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
         .range([0, width]);
 
     const y = d3.scaleLinear()
-        .domain([0, d3.max(data, d => Math.max(d.FertilityEstimate, d.FertilityProjection))])
+        .domain([0, d3.max(data, d => d.FertilityEstimate)])
         .range([height, 0]);
 
     const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -44,32 +54,69 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
         .call(d3.axisLeft(y));
 
     // Draw lines for each region
+    const lineData = [];
     regions.forEach((values, key) => {
-        const lineEstimate = d3.line()
+        const line = d3.line()
             .x(d => x(d.Year))
             .y(d => y(d.FertilityEstimate));
 
-        const lineProjection = d3.line()
-            .x(d => x(d.Year))
-            .y(d => y(d.FertilityProjection));
+        lineData.push({ key, values });
 
-        // Draw estimates (solid line)
         svg.append("path")
             .datum(values.filter(d => !isNaN(d.FertilityEstimate)))
             .attr("fill", "none")
             .attr("stroke", color(key))
             .attr("stroke-width", 1.5)
-            .attr("d", lineEstimate);
-
-        // Draw projections (dashed line)
-        // svg.append("path")
-        //     .datum(values.filter(d => !isNaN(d.FertilityProjection)))
-        //     .attr("fill", "none")
-        //     .attr("stroke", color(key))
-        //     .attr("stroke-width", 1.5)
-        //     .style("stroke-dasharray", ("3,3"))
-        //     .attr("d", lineProjection);
+            .attr("d", line);
     });
+
+    // Vertical line for hover
+    const verticalLine = svg.append("line")
+        .attr("stroke", "#aaa")
+        .attr("stroke-width", 1)
+        .attr("y1", 0)
+        .attr("y2", height)
+        .style("display", "none");
+
+    // Overlay rectangle for mouse events
+    svg.append("rect")
+        .attr("width", width)
+        .attr("height", height)
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .on("mousemove", mousemove)
+        .on("mouseout", () => {
+            verticalLine.style("display", "none");
+            tooltip.style("display", "none");
+        });
+
+    function mousemove(event) {
+        const [mouseX] = d3.pointer(event);
+        const year = Math.round(x.invert(mouseX));
+
+        const tooltipData = lineData.map(({ key, values }) => {
+            const closest = values.find(d => d.Year === year);
+            return { key, value: closest ? closest.FertilityEstimate : null };
+        });
+
+        // Update vertical line
+        verticalLine.style("display", "block")
+            .attr("x1", x(year))
+            .attr("x2", x(year));
+
+        // Update tooltip
+        tooltip.style("display", "block")
+            .html(`
+                <strong>${year}</strong><br>
+                ${tooltipData.map(d => `
+                    <span style="color:${color(d.key)};">
+                        ${d.key}: <strong>${d.value ? d.value.toFixed(2) : 'N/A'}</strong>
+                    </span>
+                `).join('<br>')}
+            `)
+            .style("left", `${event.pageX + 10}px`)
+            .style("top", `${event.pageY - 20}px`);
+    }
 
     // Add a legend
     const legend = svg.selectAll(".legend")

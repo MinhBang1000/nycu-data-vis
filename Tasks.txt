@@ -10,7 +10,8 @@ Figure 2:
 Figure 3:
 - Hover Legend
 - Hover line --- Tooltip
-- 
+- Add the points on the line when Hover
+- Edit the Tooltip
 
 
 
