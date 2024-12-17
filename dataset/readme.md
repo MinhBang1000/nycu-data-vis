@@ -1,6 +1,6 @@
 # Fertility rate: children per woman - Data package
 
-This data package contains the data that powers the chart ["Fertility rate: children per woman"](https://ourworldindata.org/grapher/fertility-rate-with-projections?time=earliest..2023&v=1&csvType=filtered&useColumnShortNames=false) on the Our World in Data website.
+This data package contains the data that powers the chart ["Fertility rate: children per woman"](https://ourworldindata.org/grapher/fertility-rate-with-projections?v=1&csvType=filtered&useColumnShortNames=false) on the Our World in Data website.
 
 ## CSV Structure
 

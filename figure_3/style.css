@@ -1,9 +1,26 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
     margin: 0;
-    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: white;
 }
+
+.chart-container {
+    width: 95%;
+    max-width: 960px;
+    height: auto;
+    aspect-ratio: 16 / 9; /* Maintains aspect ratio for responsive design */
+    margin: 20px auto;
+}
+
+svg {
+    width: 100%;
+    height: 100%;
+}
+
 
 h1 {
     margin: 20px 0;
@@ -18,3 +35,16 @@ p {
     width: 100%;
     height: 500px;
 }
+
+.tooltip {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 12px;
+    pointer-events: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+

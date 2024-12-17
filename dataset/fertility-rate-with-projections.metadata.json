@@ -3,7 +3,7 @@
     "title": "Fertility rate: children per woman",
     "subtitle": "The [fertility rate](#dod:fertility-rate), expressed as the number of children per woman, is based on age-specific fertility rates in one particular year. Estimates are shown with projections until 2100, based on the [UN medium scenario](#dod:un-projection-scenarios).",
     "citation": "UN, World Population Prospects (2024)",
-    "originalChartUrl": "https://ourworldindata.org/grapher/fertility-rate-with-projections?time=earliest..2023&v=1&csvType=filtered&useColumnShortNames=false",
+    "originalChartUrl": "https://ourworldindata.org/grapher/fertility-rate-with-projections?v=1&csvType=filtered&useColumnShortNames=false",
     "selection": [
       "World",
       "Africa (UN)",
@@ -50,8 +50,6 @@
       "fullMetadata": "https://api.ourworldindata.org/v1/indicators/950923.metadata.json"
     }
   },
-  "dateDownloaded": "2024-12-16",
-  "activeFilters": {
-    "time": "earliest..2023"
-  }
+  "dateDownloaded": "2024-12-17",
+  "activeFilters": {}
 }

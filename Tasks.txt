@@ -16,3 +16,17 @@ Figure 3:
 
 
 # Should visual to 2100
+
+
+
+    // // Add labels at the end of each line
+    // regions.forEach((values, key) => {
+    //     const lastDataPoint = values[values.length - 1]; // Last year data
+    //     svg.append("text")
+    //         .attr("x", x(lastDataPoint.Year) + 5) // Slightly offset to the right
+    //         .attr("y", y(lastDataPoint.FertilityEstimate))
+    //         .attr("dy", "0.35em")
+    //         .style("fill", color(key))
+    //         .style("font-size", "12px")
+    //         .text(key);
+    // });
