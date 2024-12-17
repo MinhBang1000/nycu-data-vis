@@ -1,28 +1,22 @@
-// Set margins and dimensions relative to the viewBox
 const margin = { top: 50, right: 80, bottom: 50, left: 60 };
 const width = 700 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
 const svg = d3.select("svg")
     .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-    .attr("preserveAspectRatio", "xMidYMid meet") // Maintain aspect ratio
+    .attr("preserveAspectRatio", "xMidYMid meet")
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Tooltip
 const tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("display", "none");
 
-// Add points container
 const pointsGroup = svg.append("g").attr("class", "points");
 
-// Load the CSV file
 d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
-    // Parse the data
     data.forEach(d => {
         d.Year = +d.Year;
-        // Use 'estimates' column for historical data; 'medium' column for future data
         d.FertilityEstimate = d["Fertility rate - Sex: all - Age: all - Variant: estimates"]
             ? +d["Fertility rate - Sex: all - Age: all - Variant: estimates"]
             : +d["Fertility rate - Sex: all - Age: all - Variant: medium"];
@@ -35,21 +29,29 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
         .domain(d3.extent(data, d => d.Year))
         .range([0, width]);
 
+    const yTicks = 7;
     const y = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.FertilityEstimate)])
+        .domain([0, 7])
         .range([height, 0]);
 
-    // Add axes
-    const formatYear = d3.format("d"); // Removes commas and formats as integers
     svg.append("g")
         .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x).tickFormat(formatYear));
-    svg.append("g").call(d3.axisLeft(y));
+        .call(d3.axisBottom(x).tickFormat(d3.format("d")));
+
+    svg.append("g")
+        .attr("class", "grid")
+        .call(d3.axisLeft(y)
+            .tickSize(-width)
+            .ticks(yTicks))
+        .selectAll("line")
+        .attr("stroke", "#ddd");
+
+    svg.selectAll(".grid .domain").remove();
 
     const legend = svg.append("g")
-        .attr("transform", `translate(${width}, 0)`); // Adjust legend position
+        .attr("transform", `translate(${width}, 0)`);
 
-    let legendYOffset = 0; // Starting Y offset
+    let legendYOffset = 0;
 
     const simplifyKey = (key) => {
         const keyMap = {
@@ -59,7 +61,6 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
         return keyMap[key] || key.replace(/\s*\(.*?\)/g, "").trim();
     };
 
-    // Add lines and attach IDs for easy selection
     const lines = {};
     regions.forEach((values, key) => {
         const pastData = values.filter(d => d.Year <= 2023);
@@ -71,8 +72,7 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
             .attr("stroke", color(key))
             .attr("stroke-width", 1.5)
             .attr("class", "line")
-            .attr("id", `line-${key.replace(/[^\w-]/g, "")}`) // Remove all non-alphanumeric characters except hyphens
-
+            .attr("id", `line-${key.replace(/[^\w-]/g, "")}`)
             .attr("d", d3.line()
                 .x(d => x(d.Year))
                 .y(d => y(d.FertilityEstimate)));
@@ -82,22 +82,19 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
             .attr("fill", "none")
             .attr("stroke", color(key))
             .attr("stroke-width", 1.5)
-            .attr("stroke-dasharray", "4 4") // Dashed line pattern
+            .attr("stroke-dasharray", "4 4")
             .attr("class", "line")
-            .attr("id", `line-${key.replace(/[^\w-]/g, "")}`) // Remove all non-alphanumeric characters except hyphens
-
+            .attr("id", `line-${key.replace(/[^\w-]/g, "")}`)
             .attr("d", d3.line()
                 .x(d => x(d.Year))
                 .y(d => y(d.FertilityEstimate)));
 
-        lines[key] = line; // Save line reference
+        lines[key] = line;
     });
 
-    // Build interactive legend
     regions.forEach((_, key) => {
         const simplifiedKey = simplifyKey(key);
 
-        // Legend rectangle
         legend.append("rect")
             .attr("x", 0)
             .attr("y", legendYOffset)
@@ -107,7 +104,6 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
             .on("mouseenter", () => highlightLine(key))
             .on("mouseleave", resetLines);
 
-        // Legend text
         legend.append("text")
             .attr("x", 20)
             .attr("y", legendYOffset + 10)
@@ -117,22 +113,18 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
             .on("mouseenter", () => highlightLine(key))
             .on("mouseleave", resetLines);
 
-        legendYOffset += 25; // Increase spacing between legend items
+        legendYOffset += 25;
     });
 
-    // Function to highlight the corresponding line
     function highlightLine(key) {
-        svg.selectAll(".line").style("opacity", 0.2); // Dim all lines
+        svg.selectAll(".line").style("opacity", 0.2);
         svg.selectAll(`#line-${key.replace(/[^\w-]/g, "")}`).style("opacity", 1).style("stroke-width", 2.5);
-    }    
+    }
 
-    // Function to reset all lines
     function resetLines() {
         svg.selectAll(".line").style("opacity", 1).style("stroke-width", 1.5);
     }
 
-
-    // Vertical line and points for hover
     const verticalLine = svg.append("line")
         .attr("stroke", "#aaa")
         .attr("stroke-width", 1)

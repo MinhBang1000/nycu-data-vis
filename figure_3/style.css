@@ -1,50 +1,110 @@
+/* General Body Styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', Arial, sans-serif; /* Modern and clean font */
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: white;
-}
-
-.chart-container {
-    width: 95%;
-    max-width: 960px;
-    height: auto;
-    aspect-ratio: 16 / 9; /* Maintains aspect ratio for responsive design */
-    margin: 20px auto;
-}
-
-svg {
-    width: 100%;
-    height: 100%;
-}
-
-
-h1 {
-    margin: 20px 0;
+    min-height: 100vh;
+    background-color: white; /* Keep original white background */
     color: #333;
 }
 
-p {
-    color: #555;
+/* Container for the Chart */
+.chart-container {
+    width: 90%;
+    max-width: 960px;
+    border-radius: 12px; /* Rounded corners for modern feel */
+    padding: 20px;
+    margin: 30px auto;
 }
 
-#chart {
+/* SVG Styling */
+svg {
     width: 100%;
-    height: 500px;
+    height: auto;
+    border-radius: 8px; /* Slightly rounded corners for SVG */
 }
 
+/* Headings */
+h1 {
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+p {
+    text-align: center;
+    color: #555;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* Tooltip Styling */
 .tooltip {
     position: absolute;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 12px;
     font-size: 12px;
     pointer-events: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.3s ease;
+    font-family: 'Poppins', Arial, sans-serif;
 }
 
+.tooltip strong {
+    font-weight: bold;
+    color: #444;
+}
 
+.tooltip span {
+    display: block;
+    margin-top: 5px;
+}
+
+/* Axis Lines and Grid */
+.grid line {
+    stroke: #ddd;
+    stroke-dasharray: 4 4; /* Dotted grid lines */
+}
+
+.axis path,
+.axis line {
+    stroke: none;
+}
+
+.axis text {
+    font-size: 12px;
+    fill: #666;
+}
+
+/* Legend Styling */
+.legend text {
+    font-size: 10px;
+    font-weight: 500;
+    fill: #444;
+}
+
+.legend rect {
+    stroke-width: 0;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.legend rect:hover {
+    opacity: 0.8;
+}
+
+/* Interactive Effects for Hovered Lines */
+.line {
+    transition: stroke-width 0.3s ease;
+}
+
+.line:hover {
+    stroke-width: 3;
+}
