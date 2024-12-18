@@ -1,6 +1,6 @@
-# Fertility rate: children per woman - Data package
+# Population by age group - Data package
 
-This data package contains the data that powers the chart ["Fertility rate: children per woman"](https://ourworldindata.org/grapher/fertility-rate-with-projections?v=1&csvType=filtered&useColumnShortNames=false) on the Our World in Data website.
+This data package contains the data that powers the chart ["Population by age group"](https://ourworldindata.org/grapher/population-by-age-group?v=1&csvType=full&useColumnShortNames=false) on the Our World in Data website.
 
 ## CSV Structure
 
@@ -27,11 +27,11 @@ All data and visualizations on Our World in Data rely on data sourced from one o
 ## Detailed information about each time series
 
 
-## Fertility rate,total – UN WPP
-The average number of live births a hypothetical cohort of women would have at the end of their reproductive period if they were subject during their whole lives to the fertility rates of a given period and if they were not subject to mortality.
+## Population,ages 65+ – UN WPP
+De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 65+.
 Last updated: July 12, 2024  
 Date range: 1950–2023  
-Unit: live births per woman  
+Unit: people  
 
 
 ### How to cite this data
@@ -41,11 +41,10 @@ If you have limited space (e.g. in data visualizations), you can use this abbrev
 UN, World Population Prospects (2024) – processed by Our World in Data
 
 #### Full citation
-UN, World Population Prospects (2024) – processed by Our World in Data. “Fertility rate,total – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 65+ – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
 Source: UN, World Population Prospects (2024) – processed by Our World In Data
 
 ### What you should know about this data
-* It is expressed as live births per woman. For age-specific fertility rates, it measures the number of births to women in a particular age group, divided by the number of women in that age group. The age groups used are: 15-19, 20-24, ..., 45-49. The data refer to annual civil calendar years from 1 January to 31 December.
 
 ### Source
 
@@ -54,11 +53,11 @@ Retrieved on: 2024-07-11
 Retrieved from: https://population.un.org/wpp/Download/  
 
 
-## Fertility rate,medium projection – UN WPP
-The average number of live births a hypothetical cohort of women would have at the end of their reproductive period if they were subject during their whole lives to the fertility rates of a given period and if they were not subject to mortality.Projections from 2024 onwards are based on the UN's medium scenario.
+## Population,ages 25-64 – UN WPP
+De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 25-64.
 Last updated: July 12, 2024  
-Date range: 2024–2100  
-Unit: live births per woman  
+Date range: 1950–2023  
+Unit: people  
 
 
 ### How to cite this data
@@ -68,11 +67,88 @@ If you have limited space (e.g. in data visualizations), you can use this abbrev
 UN, World Population Prospects (2024) – processed by Our World in Data
 
 #### Full citation
-UN, World Population Prospects (2024) – processed by Our World in Data. “Fertility rate,medium projection – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 25-64 – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
 Source: UN, World Population Prospects (2024) – processed by Our World In Data
 
 ### What you should know about this data
-* It is expressed as live births per woman. For age-specific fertility rates, it measures the number of births to women in a particular age group, divided by the number of women in that age group. The age groups used are: 15-19, 20-24, ..., 45-49. The data refer to annual civil calendar years from 1 January to 31 December.
+
+### Source
+
+#### United Nations – World Population Prospects
+Retrieved on: 2024-07-11  
+Retrieved from: https://population.un.org/wpp/Download/  
+
+
+## Population,ages 15-24 – UN WPP
+De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 15-24.
+Last updated: July 12, 2024  
+Date range: 1950–2023  
+Unit: people  
+
+
+### How to cite this data
+
+#### In-line citation
+If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
+UN, World Population Prospects (2024) – processed by Our World in Data
+
+#### Full citation
+UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 15-24 – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+Source: UN, World Population Prospects (2024) – processed by Our World In Data
+
+### What you should know about this data
+
+### Source
+
+#### United Nations – World Population Prospects
+Retrieved on: 2024-07-11  
+Retrieved from: https://population.un.org/wpp/Download/  
+
+
+## Population,ages 5-14 – UN WPP
+De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 5-14.
+Last updated: July 12, 2024  
+Date range: 1950–2023  
+Unit: people  
+
+
+### How to cite this data
+
+#### In-line citation
+If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
+UN, World Population Prospects (2024) – processed by Our World in Data
+
+#### Full citation
+UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 5-14 – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+Source: UN, World Population Prospects (2024) – processed by Our World In Data
+
+### What you should know about this data
+
+### Source
+
+#### United Nations – World Population Prospects
+Retrieved on: 2024-07-11  
+Retrieved from: https://population.un.org/wpp/Download/  
+
+
+## Population,ages 0-4 – UN WPP
+De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 0-4.
+Last updated: July 12, 2024  
+Date range: 1950–2023  
+Unit: people  
+
+
+### How to cite this data
+
+#### In-line citation
+If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
+UN, World Population Prospects (2024) – processed by Our World in Data
+
+#### Full citation
+UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 0-4 – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+Source: UN, World Population Prospects (2024) – processed by Our World In Data
+
+### What you should know about this data
 
 ### Source
 
