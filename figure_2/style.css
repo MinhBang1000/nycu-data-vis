@@ -49,6 +49,7 @@ svg {
 }
 
 #year-slider {
+    min-width: 300px;
     flex: 1;
     margin: 0 10px;
     appearance: none;

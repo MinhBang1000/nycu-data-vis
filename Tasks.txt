@@ -15,7 +15,7 @@ Figure 3:
 
 
 
-# Should visual to 2100
+# Should visual to 2100 --> All of them
 
 
 
@@ -30,3 +30,9 @@ Figure 3:
     //         .style("font-size", "12px")
     //         .text(key);
     // });
+
+
+# Tasks:
+- Revise the hover in figure 2
+- Qualify the chart for the same visual
+- Find the dashboard - Design the dashboard

@@ -15,7 +15,7 @@ const tooltip = d3.select("body").append("div")
     .attr("class", "tooltip");
 
 // Function to update the chart based on year
-function updateChart(data, year) {
+function updateChart(data, year, regions) {
     const filteredData = data.filter(d => d.Year === year);
 
     const x = d3.scaleLinear()
@@ -31,19 +31,9 @@ function updateChart(data, year) {
         .range([3, 30]); // Slightly larger range for better visibility
 
 
-
-    // const color = d3.scaleOrdinal()
-    //     .domain(["Africa", "Asia", "Europe", "North America", "Oceania", "South America"])
-    //     .range(["#FF9AA2", "#FFB347", "#B5EAD7", "#C7CEEA", "#FFDAC1", "#9DE0AD"]);
-
-    // const color = d3.scaleOrdinal()
-    //     .domain(["Africa", "Asia", "Europe", "North America", "Oceania", "South America"])
-    //     .range(["#E63946", "#F1FAEE", "#A8DADC", "#457B9D", "#1D3557", "#F4A261"]);
-
     const color = d3.scaleOrdinal()
         .domain(["Africa", "Asia", "Europe", "North America", "Oceania", "South America"])
         .range(["#8E44AD", "#3498DB", "#2ECC71", "#F39C12", "#E74C3C", "#16A085"]);
-
 
 
     // Add Legend
@@ -69,12 +59,16 @@ function updateChart(data, year) {
         .on("mouseover", (event, d) => {
             // Highlight only the bubbles that match the region
             g.selectAll(".bubbles")
-                .style("opacity", b => b["World regions according to OWID"] === d ? 1 : 0.1);
+                .style("opacity", b => regions[b["Code"]] === d ? 1 : 0.1);
+            g.selectAll(".country-label")
+                .style("opacity", b => regions[b["Code"]] === d ? 1 : 0); // Show only matching
         })
         .on("mouseout", () => {
             // Reset bubble opacity
             g.selectAll(".bubbles")
                 .style("opacity", 0.7);
+            g.selectAll(".country-label")
+                .style("opacity", 1); // Reset all labels to visible
         });
 
     legend.selectAll("legend-label")
@@ -90,12 +84,16 @@ function updateChart(data, year) {
         .on("mouseover", (event, d) => {
             // Highlight only the bubbles that match the region
             g.selectAll(".bubbles")
-                .style("opacity", b => b["World regions according to OWID"] === d ? 1 : 0.1);
+                .style("opacity", b => regions[b["Code"]] === d ? 1 : 0.1);
+            g.selectAll(".country-label")
+                .style("opacity", b => regions[b["Code"]] === d ? 1 : 0); // Show only matching
         })
         .on("mouseout", () => {
             // Reset bubble opacity
             g.selectAll(".bubbles")
                 .style("opacity", 0.7);
+            g.selectAll(".country-label")
+                .style("opacity", 1); // Reset all labels to visible
         });
 
 
@@ -191,7 +189,7 @@ function updateChart(data, year) {
         .attr("cx", d => x(d.deathRate))
         .attr("cy", d => y(d.birthRate))
         .attr("r", 0) // Start with 0 radius for transition
-        .style("fill", d => color(d["World regions according to OWID"]))
+        .style("fill", d => color(regions[d["Code"]]))
         .style("opacity", 0.7);
 
     // MERGE (ENTER + UPDATE)
@@ -237,23 +235,27 @@ function updateChart(data, year) {
     g.selectAll(".country-label")
         .data(filteredData
             .sort((a, b) => b.population - a.population) // Sort by population (descending)
-            .slice(0, 10) // Show only top 10 countries
+            .slice(0, 10) // Show only top 15 countries
         )
         .enter()
         .append("text")
         .attr("class", "country-label")
-        .attr("x", d => x(d.deathRate) + 8) // Slightly offset to the right
-        .attr("y", d => y(d.birthRate) + 4) // Adjust for vertical alignment
-        .style("font-size", "14px") // Smaller font size
+        .attr("x", d => x(d.deathRate) + 8) // Offset to the right of the bubble
+        .attr("y", d => {
+            // Adjust Y-position to avoid overlap
+            const baseY = y(d.birthRate) + 4;
+            const offset = Math.random() * 20 - 10; // Random small offset to spread labels
+            return baseY + offset;
+        })
+        .style("font-size", "14px")
         .style("font-weight", "bold")
-        .style("fill", d => d3.color(color(d["World regions according to OWID"])).darker(1)) // Match bubble color, darker
-        .style("stroke", "black") // Add border for contrast
-        .style("stroke-width", "0.5px")
-        .style("pointer-events", "none") // Avoid blocking tooltips
+        .style("fill", d => d3.color(color(regions[d["Code"]])).darker(1)) // Match bubble color, darker
+        .style("stroke", "white") // Add border for better readability
+        .style("stroke-width", "0.3px")
+        .style("pointer-events", "none")
         .text(d => d.Entity);
 
 }
-
 
 // Load data and initialize slider
 d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
@@ -264,6 +266,14 @@ d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
         && !d.Entity.includes("developed")
         && !d.Entity.includes("UN") // Exclude group names
         && !d.Entity.includes("World")); // Exclude group names
+
+    // Create a mapping for regions using the 2023 data
+    const regionMapping = {};
+    filteredData
+        .filter(d => d.Year === "2023") // Filter for the year 2023
+        .forEach(d => {
+            regionMapping[d.Code] = d["World regions according to OWID"];
+        });
 
     // Convert necessary fields to numeric values
     filteredData.forEach(d => {
@@ -278,13 +288,13 @@ d3.csv("../dataset/birth-rate-vs-death-rate.csv").then(data => {
 
     // Initialize chart with default year (slider's initial value)
     let currentYear = yearSlider.property("value");
-    updateChart(filteredData, currentYear);
+    updateChart(filteredData, currentYear, regionMapping);
 
     // Update chart when slider value changes
     yearSlider.on("input", function () {
         currentYear = this.value;
         yearDisplay.text(currentYear);
-        updateChart(filteredData, currentYear);
+        updateChart(filteredData, currentYear, regionMapping);
     });
 });
 
