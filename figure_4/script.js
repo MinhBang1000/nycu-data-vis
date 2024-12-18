@@ -11,12 +11,29 @@ const svg = d3.select("#my_dataviz")
     .append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+// Tooltip setup
+const tooltip = d3.select("body").append("div")
+    .style("position", "absolute")
+    .style("background", "white")
+    .style("border", "1px solid grey")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+    .style("opacity", 0)
+    .style("pointer-events", "none");
+
+// Vertical line
+const verticalLine = svg.append("line")
+    .attr("stroke", "grey")
+    .attr("stroke-width", 1)
+    .attr("y1", 0)
+    .attr("y2", height)
+    .style("opacity", 0);
+
 // Function to format Y-axis values
 function formatYAxis(d) {
     if (d >= 1e9) return `${d / 1e9} billion`;
     if (d >= 1e6) return `${d / 1e6} million`;
-    if (d >= 1e3) return `${d / 1e3}k`;
-    return d; // Default for smaller numbers
+    return d;
 }
 
 // Function to draw the chart based on filtered data
@@ -40,21 +57,27 @@ function updateChart(data, minYear, maxYear) {
 
     svg.selectAll("*").remove(); // Clear the chart
 
+    // Add Y-axis gridlines
+    svg.append("g")
+        .call(d3.axisLeft(y).ticks(10).tickSize(-width).tickFormat(formatYAxis))
+        .selectAll(".tick line")
+        .style("stroke", "grey")
+        .style("stroke-dasharray", "3,3")
+        .style("opacity", 0.3);
+
+    svg.selectAll(".domain").remove();
+
     // Add X-axis
     svg.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x).ticks(10).tickFormat(d3.format("d")));
 
-    // Add Y-axis gridlines with formatted ticks
-    svg.append("g")
-        .call(d3.axisLeft(y).ticks(10).tickSize(-width).tickFormat(formatYAxis))
-        .selectAll(".domain").remove();
-
-    // Add the stacked areas
-    svg.selectAll("mylayers")
+    // Add stacked areas
+    svg.selectAll(".area")
         .data(stackedData)
         .enter()
         .append("path")
+        .attr("class", "area")
         .style("fill", d => color(d.key))
         .attr("d", d3.area()
             .x(d => x(d.data.Year))
@@ -62,36 +85,79 @@ function updateChart(data, minYear, maxYear) {
             .y1(d => y(d[1]))
         );
 
-    // Add horizontal blur gridlines
-    svg.selectAll(".tick line")
-        .style("stroke", "grey")
-        .style("stroke-dasharray", "3,3")
-        .style("opacity", 0.4);
+    // Recreate the vertical line every time chart is updated
+    const verticalLine = svg.append("line")
+        .attr("stroke", "grey")
+        .attr("stroke-width", 1)
+        .attr("y1", 0)
+        .attr("y2", height)
+        .style("opacity", 0);
 
-    // Add labels dynamically for the last year
-    svg.selectAll(".label")
-        .data(groups)
-        .enter()
-        .append("text")
-        .attr("class", "label")
-        .attr("x", width + 5) // Place outside the chart
-        .attr("y", (group, i) => {
-            const groupIndex = groups.indexOf(group);
-            const y0 = y(stackedData[groupIndex][stackedData[groupIndex].length - 1][0]);
-            const y1 = y(stackedData[groupIndex][stackedData[groupIndex].length - 1][1]);
-            return (y0 + y1) / 2; // Midpoint
+    // Add circles for points belonging to each area
+    const circles = groups.map((group, i) =>
+        svg.append("circle")
+            .attr("r", 5) // Circle radius
+            .attr("fill", color(group)) // Match group color
+            .style("opacity", 0) // Hidden initially
+    );
+
+    // Mousemove handler
+    svg.append("rect")
+        .attr("width", width)
+        .attr("height", height)
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .on("mousemove", function (event) {
+            const [mouseX] = d3.pointer(event);
+            const hoveredYear = Math.round(x.invert(mouseX));
+            const yearData = filteredData.find(d => d.Year === hoveredYear);
+
+            if (yearData) {
+                // Calculate cumulative heights for each group
+                let cumulative = 0;
+
+                circles.forEach((circle, i) => {
+                    const yValue = groups[i]; // Current group key
+                    cumulative += yearData[yValue]; // Add group's value to cumulative height
+
+                    circle
+                        .style("opacity", 1)
+                        .attr("cx", x(hoveredYear)) // Align with the vertical line
+                        .attr("cy", y(cumulative)); // Use cumulative value for position
+                });
+
+                // Update tooltip
+                tooltip.style("opacity", 1)
+                    .html(`
+                        <b>${hoveredYear}</b><br>
+                        Ages 65+: ${yearData["65+"].toLocaleString()}<br>
+                        Ages 25-64: ${yearData["25-64"].toLocaleString()}<br>
+                        Ages 15-24: ${yearData["15-24"].toLocaleString()}<br>
+                        Ages 5-14: ${yearData["5-14"].toLocaleString()}<br>
+                        Under-5s: ${yearData["0-4"].toLocaleString()}
+                    `)
+                    .style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 10}px`);
+
+                // Update vertical line
+                verticalLine
+                    .style("opacity", 1)
+                    .attr("x1", x(hoveredYear))
+                    .attr("x2", x(hoveredYear));
+            }
         })
-        .text(d => d)
-        .style("fill", d => color(d))
-        .style("font-size", "12px")
-        .style("alignment-baseline", "middle");
+        .on("mouseleave", () => {
+            // Hide tooltip, circles, and line
+            tooltip.style("opacity", 0);
+            verticalLine.style("opacity", 0);
+            circles.forEach(circle => circle.style("opacity", 0));
+        });
 }
+
 
 // Load the CSV data
 d3.csv("../dataset/population-by-age-group.csv").then(data => {
-    const worldData = data.filter(d => d.Entity === "World");
-
-    worldData.forEach(d => {
+    data.forEach(d => {
         d.Year = +d.Year;
         d["65+"] = +d["Population - Sex: all - Age: 65+ - Variant: estimates"];
         d["25-64"] = +d["Population - Sex: all - Age: 25-64 - Variant: estimates"];
@@ -102,22 +168,35 @@ d3.csv("../dataset/population-by-age-group.csv").then(data => {
 
     const slider = document.getElementById("timeRange");
     const timeLabel = document.getElementById("timeLabel");
+    const countrySelect = document.getElementById("countrySelect");
 
+    const countries = [...new Set(data.map(d => d.Entity))].sort();
+    countries.forEach(country => {
+        const option = document.createElement("option");
+        option.value = country;
+        option.textContent = country;
+        countrySelect.appendChild(option);
+    });
+
+    let selectedCountry = "World";
     let minYear = 1950;
     let maxYear = +slider.value;
 
-    // Initial chart rendering
-    updateChart(worldData, minYear, maxYear);
+    let filteredData = data.filter(d => d.Entity === selectedCountry);
+    updateChart(filteredData, minYear, maxYear);
 
-    // Update chart when the slider changes
     slider.addEventListener("input", (e) => {
         const newMaxYear = +e.target.value;
         if (newMaxYear - minYear >= 10) {
             maxYear = newMaxYear;
             timeLabel.textContent = `Year: ${minYear} - ${maxYear}`;
-            updateChart(worldData, minYear, maxYear);
-        } else {
-            e.target.value = maxYear; // Prevent slider from going below 10 years
+            updateChart(filteredData, minYear, maxYear);
         }
+    });
+
+    countrySelect.addEventListener("change", (e) => {
+        selectedCountry = e.target.value;
+        filteredData = data.filter(d => d.Entity === selectedCountry);
+        updateChart(filteredData, minYear, maxYear);
     });
 });
