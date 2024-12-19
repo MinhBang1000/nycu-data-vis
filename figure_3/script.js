@@ -169,13 +169,40 @@ d3.csv("../dataset/fertility-rate-with-projections.csv").then(data => {
         });
 
         tooltip.html(`
-            <div style="text-align: left;">
-                <strong>${year}</strong><br>
+            <div style="
+                text-align: left;
+                font-family: 'Poppins', Arial, sans-serif;
+                color: #333;
+                background: #ffffff;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 12px 16px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                line-height: 1.5;
+                min-width: 140px;
+            ">
+                <div style="
+                    font-size: 24px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 8px;
+                    border-bottom: 1px solid #ddd;
+                ">
+                    <strong>${year}</strong>
+                </div>
                 ${tooltipValues.map(d => `
-                    <span style="color:${color(d.key)};">
-                        ${d.key}: <strong>${d.value.toFixed(2)}</strong>
-                    </span>`).join('<br>')}
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 5px;">
+                        <span style="color:${color(d.key)}; font-weight: 500;">
+                            ${simplifyKey(d.key)}
+                        </span>
+                        <span style="font-weight: 700; color: #333;">
+                            ${d.value.toFixed(2)}
+                        </span>
+                    </div>
+                `).join('')}
             </div>
         `);
+
+
     }
 });
