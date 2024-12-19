@@ -1,4 +1,4 @@
-const margin = { top: 50, right: 80, bottom: 50, left: 60 };
+const margin = { top: 10, right: 80, bottom: 50, left: 60 };
 const width = 700 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
@@ -15,6 +15,8 @@ const tooltip = d3.select("body").append("div")
 const pointsGroup = svg.append("g").attr("class", "points");
 
 const countrySelect = d3.select("#country-select");
+const slider = d3.select("#timeRange");
+const timeLabel = d3.select("#timeLabel");
 
 d3.csv("../dataset/population-growth-rates.csv").then(data => {
     // Data Parsing
@@ -35,30 +37,51 @@ d3.csv("../dataset/population-growth-rates.csv").then(data => {
         .attr("value", d => d)
         .text(d => d);
 
+    // Initial settings
+    const minYear = 1950;
+    const maxYearFull = 2100; // Extend max year to 2100
+    let maxYear = +slider.node().value;
+
+    slider.attr("max", maxYearFull); // Set slider max to 2100
+
     // Initial rendering
-    updateChart(countries[0]);
+    let selectedCountry = countries[0];
+    let filteredData = data.filter(d => d.Entity === selectedCountry);
+
+    updateChart(filteredData, minYear, maxYear);
 
     // Update chart when a country is selected
     countrySelect.on("change", () => {
-        const selectedCountry = countrySelect.node().value;
-        updateChart(selectedCountry);
+        selectedCountry = countrySelect.node().value;
+        filteredData = data.filter(d => d.Entity === selectedCountry);
+        updateChart(filteredData, minYear, maxYear);
     });
 
-    function updateChart(country) {
-        // Filter data for selected country
-        const countryData = data.filter(d => d.Entity === country);
-        const pastData = countryData.filter(d => d.Estimate !== null);
-        const futureData = countryData.filter(d => d.Medium !== null);
+    // Update chart when the year range changes
+    slider.on("input", () => {
+        const newMaxYear = +slider.node().value;
+        if (newMaxYear - minYear >= 10) {
+            maxYear = newMaxYear;
+            timeLabel.text(`Year: ${minYear} - ${maxYear}`);
+            updateChart(filteredData, minYear, maxYear);
+        }
+    });
+
+    function updateChart(countryData, minYear, maxYear) {
+        // Filter data by the selected year range
+        const yearFilteredData = countryData.filter(d => d.Year >= minYear && d.Year <= maxYear);
+        const pastData = yearFilteredData.filter(d => d.Estimate !== null);
+        const futureData = yearFilteredData.filter(d => d.Medium !== null);
 
         // Update axes scaling
         const x = d3.scaleLinear()
-            .domain(d3.extent(countryData, d => d.Year))
+            .domain([minYear, maxYear]) // Dynamically adjust x-axis to selected year range
             .range([0, width]);
 
         const y = d3.scaleLinear()
             .domain([
-                d3.min(countryData, d => Math.min(d.Estimate || 0, d.Medium || 0)),
-                d3.max(countryData, d => Math.max(d.Estimate || 0, d.Medium || 0)) * 1.1
+                d3.min(yearFilteredData, d => Math.min(d.Estimate || 0, d.Medium || 0)),
+                d3.max(yearFilteredData, d => Math.max(d.Estimate || 0, d.Medium || 0)) * 1.1
             ])
             .range([height, 0]);
 
@@ -85,7 +108,7 @@ d3.csv("../dataset/population-growth-rates.csv").then(data => {
         svg.append("path")
             .datum(pastData)
             .attr("fill", "none")
-            .attr("stroke", color(country))
+            .attr("stroke", color(selectedCountry))
             .attr("stroke-width", 1.5)
             .attr("class", "line")
             .attr("d", d3.line()
@@ -96,13 +119,68 @@ d3.csv("../dataset/population-growth-rates.csv").then(data => {
         svg.append("path")
             .datum(futureData)
             .attr("fill", "none")
-            .attr("stroke", color(country))
+            .attr("stroke", color(selectedCountry))
             .attr("stroke-width", 1.5)
             .attr("stroke-dasharray", "4 4")
             .attr("class", "line")
             .attr("d", d3.line()
                 .x(d => x(d.Year))
                 .y(d => y(d.Medium)));
+
+        // Solid Line for Past Data
+        const solidLine = svg.append("path")
+            .datum(pastData)
+            .attr("fill", "none")
+            .attr("stroke", color(selectedCountry))
+            .attr("stroke-width", 1.5)
+            .attr("class", "line")
+            .attr("d", d3.line()
+                .x(d => x(d.Year))
+                .y(d => y(d.Estimate)));
+
+        // Dashed Line for Future Data
+        const dashedLine = svg.append("path")
+            .datum(futureData)
+            .attr("fill", "none")
+            .attr("stroke", color(selectedCountry))
+            .attr("stroke-width", 1.5)
+            .attr("stroke-dasharray", "4 4")
+            .attr("class", "line")
+            .attr("d", d3.line()
+                .x(d => x(d.Year))
+                .y(d => y(d.Medium)));
+
+        // Add legend label dynamically based on the visible range
+        const lastSolidPoint = pastData[pastData.length - 1]; // Get the last point in the solid line
+        const lastFuturePoint = futureData.length > 0 ? futureData[futureData.length - 1] : null; // Get the last point in the dashed line
+
+        let labelX, labelY;
+
+        // Check if the range includes future values
+        if (maxYear >= 2023 && lastFuturePoint) {
+            // Position the label on the dashed line (future data)
+            const maxX = width - 50; // Ensure the label stays within chart bounds
+            labelX = Math.min(x(lastFuturePoint.Year) + 5, maxX); // Adjust x position if near the edge
+            labelY = y(lastFuturePoint.Medium) - 20; // Slightly above the dashed line
+        } else {
+            // Position the label on the solid line (past data)
+            const maxX = width - 50; // Ensure the label stays within chart bounds
+            labelX = Math.min(x(lastSolidPoint.Year) + 5, maxX); // Adjust x position if near the edge
+            labelY = y(lastSolidPoint.Estimate) - 5; // Slightly above the solid line
+        }
+
+        // Add the label to the chart
+        svg.append("text")
+            .attr("x", labelX) // Dynamically adjust X position
+            .attr("y", labelY) // Dynamically adjust Y position
+            .attr("fill", color(selectedCountry)) // Match the line color
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .text(selectedCountry) // Display the country name
+            .attr("text-anchor", "end") // Align text to the end for better appearance
+            .attr("dx", -5) // Add some padding to the right
+            .style("pointer-events", "none"); // Ensure the text is non-interactive
+
 
         // Tooltip
         const verticalLine = svg.append("line")
@@ -115,14 +193,14 @@ d3.csv("../dataset/population-growth-rates.csv").then(data => {
             .attr("width", width).attr("height", height)
             .style("fill", "none")
             .style("pointer-events", "all")
-            .on("mousemove", event => mousemove(event, x, y, pastData, futureData, country))
+            .on("mousemove", event => mousemove(event, x, y, pastData, futureData))
             .on("mouseout", () => {
                 tooltip.style("display", "none");
                 verticalLine.style("display", "none");
                 pointsGroup.selectAll("circle").remove();
             });
 
-        function mousemove(event, x, y, pastData, futureData, country) {
+        function mousemove(event, x, y, pastData, futureData) {
             const [mouseX] = d3.pointer(event);
             const year = Math.round(x.invert(mouseX));
 
@@ -139,18 +217,25 @@ d3.csv("../dataset/population-growth-rates.csv").then(data => {
             const closestFuture = futureData.find(d => d.Year === year);
 
             const tooltipValues = [];
-            if (closestPast) tooltipValues.push({ key: country, value: closestPast.Estimate });
-            if (closestFuture) tooltipValues.push({ key: country, value: closestFuture.Medium });
+            if (closestPast) tooltipValues.push({ key: selectedCountry, value: closestPast.Estimate });
+            if (closestFuture) tooltipValues.push({ key: selectedCountry, value: closestFuture.Medium });
 
             tooltip.html(`
-                <div style="text-align: left;">
-                    <strong>${year}</strong><br>
-                    ${tooltipValues.map(d => `
-                        <span style="color:${color(d.key)};">
-                            ${d.key}: <strong>${d.value.toFixed(2)}%</strong>
-                        </span>`).join('<br>')}
+                <div>
+                    <strong>${year}</strong> <!-- Year -->
+                    <div class="tooltip-row">
+                        <span class="tooltip-key">
+                            <span class="tooltip-color-box" style="background: ${color(selectedCountry)};"></span>
+                            ${selectedCountry}
+                        </span>
+                        <span class="tooltip-value">${(closestPast?.Estimate || closestFuture?.Medium).toFixed(1)}%</span>
+                    </div>
                 </div>
-            `);
+            `)
+                .style("opacity", 1) /* Make it visible */
+                .style("left", `${event.pageX + 10}px`) /* Position relative to cursor */
+                .style("top", `${event.pageY - 10}px`);
+
         }
     }
 });

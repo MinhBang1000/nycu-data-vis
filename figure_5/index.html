@@ -9,9 +9,11 @@
 </head>
 <body>
     <div class="chart-container">
-        <label for="country-select">Select Country:</label>
         <select id="country-select"></select>
         <svg></svg>
+        <label for="timeRange">Select Year Range:</label>
+        <input type="range" id="timeRange" min="1950" max="2100" step="1" value="2100">
+        <span id="timeLabel">Year: 1950 - 2100</span>
     </div>
     <script src="script.js"></script>
 </body>
