@@ -43,7 +43,8 @@ Figure 3:
 - Resizable chart. - OK
 - Add the chart from ourworldata. - OK
 
-- Qualify the chart for the same visual - 
+- Qualify the chart for the same visual - OK
+- Make the chart of ourworldata hide some information
 - Make the donwload dataset features and the embeded features and share features
 - Make fullscreen view
 - Make the introduction
