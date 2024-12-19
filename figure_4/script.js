@@ -86,20 +86,20 @@ function updateChart(data, minYear, maxYear) {
             .y1(d => y(d[1]))
         );
 
-        // Add legends dynamically
-        stackedData.forEach((layer, i) => {
-            const lastDataPoint = layer[layer.length - 1]; // Get the last point of the layer
-            const midValue = (lastDataPoint[0] + lastDataPoint[1]) / 2; // Calculate the middle Y-value for positioning
-            const year = lastDataPoint.data.Year; // Year corresponding to the last point
-    
-            svg.append("text")
-                .attr("x", x(year) + 10) // Slightly offset from the area
-                .attr("y", y(midValue)) // Position based on the mid-value of the stacked layer
-                .style("fill", color(groups[i]))
-                .style("font-size", "12px")
-                .style("font-weight", "bold")
-                .text(groups[i]); // Use the group name as the legend label
-        });
+    // Add legends dynamically
+    stackedData.forEach((layer, i) => {
+        const lastDataPoint = layer[layer.length - 1]; // Get the last point of the layer
+        const midValue = (lastDataPoint[0] + lastDataPoint[1]) / 2; // Calculate the middle Y-value for positioning
+        const year = lastDataPoint.data.Year; // Year corresponding to the last point
+
+        svg.append("text")
+            .attr("x", x(year) + 10) // Slightly offset from the area
+            .attr("y", y(midValue)) // Position based on the mid-value of the stacked layer
+            .style("fill", color(groups[i]))
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .text(groups[i]); // Use the group name as the legend label
+    });
 
     // Recreate the vertical line every time chart is updated
     const verticalLine = svg.append("line")
@@ -147,41 +147,44 @@ function updateChart(data, minYear, maxYear) {
 
                 tooltip.style("opacity", 1)
                     .html(`
-                    <div class="tooltip-title">${hoveredYear}</div>
-                    <div class="tooltip-subtitle">in people</div>
-                    <div class="tooltip-row">
+                    <div class="tooltip-row" style="border-bottom: 1px solid #ddd; margin-bottom: 8px; padding-top: 5px; display: flex; justify-content: space-between;">
+                    <div class="tooltip-title" style="font-weight: bold; font-size: 16px; margin-bottom: 5px;"><strong>${hoveredYear}</strong></div>
+                    <div class="tooltip-subtitle" style="color: #555; font-size: 12px; margin-bottom: 8px;">in people</div>
+                    </div>
+                    <div class="tooltip-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <span class="tooltip-label" style="color: #a65628;">&#9632; Ages 65+</span>
-                        <span class="tooltip-value">${yearData["65+"].toLocaleString()} million</span>
+                        <span class="tooltip-value" style="text-align: right;">${yearData["65+"].toLocaleString()} </span>
                     </div>
-                    <div class="tooltip-row">
-                        <span class="tooltip-label" style="color: #377eb8;">&#9632; Ages 25-64</span>
-                        <span class="tooltip-value">${yearData["25-64"].toLocaleString()} billion</span>
+                    <div class="tooltip-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span class="tooltip-label" style="color: #377eb8; margin-right: 10px;">&#9632; Ages 25-64</span>
+                        <span class="tooltip-value" style="text-align: right;">${yearData["25-64"].toLocaleString()}</span>
                     </div>
-                    <div class="tooltip-row">
+                    <div class="tooltip-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <span class="tooltip-label" style="color: #4daf4a;">&#9632; Ages 15-24</span>
-                        <span class="tooltip-value">${yearData["15-24"].toLocaleString()} million</span>
+                        <span class="tooltip-value" style="text-align: right;">${yearData["15-24"].toLocaleString()} </span>
                     </div>
-                    <div class="tooltip-row">
+                    <div class="tooltip-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <span class="tooltip-label" style="color: #ff7f00;">&#9632; Ages 5-14</span>
-                        <span class="tooltip-value">${yearData["5-14"].toLocaleString()} million</span>
+                        <span class="tooltip-value" style="text-align: right;">${yearData["5-14"].toLocaleString()} </span>
                     </div>
-                    <div class="tooltip-row">
+                    <div class="tooltip-row" style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                         <span class="tooltip-label" style="color: #984ea3;">&#9632; Under-5s</span>
-                        <span class="tooltip-value">${yearData["0-4"].toLocaleString()} million</span>
+                        <span class="tooltip-value" style="text-align: right;">${yearData["0-4"].toLocaleString()} </span>
                     </div>
-                    <div class="tooltip-row" style="border-top: 1px solid #ddd; margin-top: 8px; padding-top: 5px;">
-                        <span class="tooltip-label"><strong>Total</strong></span>
-                        <span class="tooltip-value" style="color: #333;">${(
+                    <div class="tooltip-row" style="border-top: 1px solid #ddd; margin-top: 8px; padding-top: 5px; display: flex; justify-content: space-between;">
+                        <span class="tooltip-label" style="font-weight: bold;">Total</span>
+                        <span class="tooltip-value" style="text-align: right; font-weight: bold; color: #333;">${(
                             yearData["65+"] +
                             yearData["25-64"] +
                             yearData["15-24"] +
                             yearData["5-14"] +
                             yearData["0-4"]
-                        ).toLocaleString()} billion</span>
+                        ).toLocaleString()} </span>
                     </div>
                 `)
                     .style("left", `${event.pageX + 10}px`)
                     .style("top", `${event.pageY - 10}px`);
+
 
 
                 // Update vertical line

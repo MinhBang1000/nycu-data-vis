@@ -35,7 +35,7 @@ Figure 3:
 # Tasks:
 - Revise the hover in figure 2 - OK
 
-- Do the figure 4
+- Do the figure 4 - OK
 - Do the figure 5
 
 - Qualify the chart for the same visual - 

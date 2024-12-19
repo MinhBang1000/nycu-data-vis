@@ -1,6 +1,6 @@
-# Population by age group - Data package
+# Population growth rate - Data package
 
-This data package contains the data that powers the chart ["Population by age group"](https://ourworldindata.org/grapher/population-by-age-group?v=1&csvType=full&useColumnShortNames=false) on the Our World in Data website.
+This data package contains the data that powers the chart ["Population growth rate"](https://ourworldindata.org/grapher/population-growth-rates?v=1&csvType=full&useColumnShortNames=false) on the Our World in Data website.
 
 ## CSV Structure
 
@@ -27,11 +27,11 @@ All data and visualizations on Our World in Data rely on data sourced from one o
 ## Detailed information about each time series
 
 
-## Population,ages 65+ – UN WPP
-De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 65+.
+## Growth rate,total – UN WPP
+Average exponential rate of growth of the population over a given period. It is calculated as ln(P2/P1) where P1 and P2 are the populations on 1 January of subsequent years.
 Last updated: July 12, 2024  
 Date range: 1950–2023  
-Unit: people  
+Unit: %  
 
 
 ### How to cite this data
@@ -41,7 +41,7 @@ If you have limited space (e.g. in data visualizations), you can use this abbrev
 UN, World Population Prospects (2024) – processed by Our World in Data
 
 #### Full citation
-UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 65+ – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+UN, World Population Prospects (2024) – processed by Our World in Data. “Growth rate,total – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
 Source: UN, World Population Prospects (2024) – processed by Our World In Data
 
 ### What you should know about this data
@@ -53,11 +53,11 @@ Retrieved on: 2024-07-11
 Retrieved from: https://population.un.org/wpp/Download/  
 
 
-## Population,ages 25-64 – UN WPP
-De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 25-64.
+## Growth rate,medium projection – UN WPP
+Average exponential rate of growth of the population over a given period. It is calculated as ln(P2/P1) where P1 and P2 are the populations on 1 January of subsequent years.Projections from 2024 onwards are based on the UN's medium scenario.
 Last updated: July 12, 2024  
-Date range: 1950–2023  
-Unit: people  
+Date range: 2024–2100  
+Unit: %  
 
 
 ### How to cite this data
@@ -67,85 +67,7 @@ If you have limited space (e.g. in data visualizations), you can use this abbrev
 UN, World Population Prospects (2024) – processed by Our World in Data
 
 #### Full citation
-UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 25-64 – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
-Source: UN, World Population Prospects (2024) – processed by Our World In Data
-
-### What you should know about this data
-
-### Source
-
-#### United Nations – World Population Prospects
-Retrieved on: 2024-07-11  
-Retrieved from: https://population.un.org/wpp/Download/  
-
-
-## Population,ages 15-24 – UN WPP
-De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 15-24.
-Last updated: July 12, 2024  
-Date range: 1950–2023  
-Unit: people  
-
-
-### How to cite this data
-
-#### In-line citation
-If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
-UN, World Population Prospects (2024) – processed by Our World in Data
-
-#### Full citation
-UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 15-24 – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
-Source: UN, World Population Prospects (2024) – processed by Our World In Data
-
-### What you should know about this data
-
-### Source
-
-#### United Nations – World Population Prospects
-Retrieved on: 2024-07-11  
-Retrieved from: https://population.un.org/wpp/Download/  
-
-
-## Population,ages 5-14 – UN WPP
-De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 5-14.
-Last updated: July 12, 2024  
-Date range: 1950–2023  
-Unit: people  
-
-
-### How to cite this data
-
-#### In-line citation
-If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
-UN, World Population Prospects (2024) – processed by Our World in Data
-
-#### Full citation
-UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 5-14 – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
-Source: UN, World Population Prospects (2024) – processed by Our World In Data
-
-### What you should know about this data
-
-### Source
-
-#### United Nations – World Population Prospects
-Retrieved on: 2024-07-11  
-Retrieved from: https://population.un.org/wpp/Download/  
-
-
-## Population,ages 0-4 – UN WPP
-De facto total population in a country, area or region as of 1 July of the year indicated.This only includesages 0-4.
-Last updated: July 12, 2024  
-Date range: 1950–2023  
-Unit: people  
-
-
-### How to cite this data
-
-#### In-line citation
-If you have limited space (e.g. in data visualizations), you can use this abbreviated in-line citation:  
-UN, World Population Prospects (2024) – processed by Our World in Data
-
-#### Full citation
-UN, World Population Prospects (2024) – processed by Our World in Data. “Population,ages 0-4 – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
+UN, World Population Prospects (2024) – processed by Our World in Data. “Growth rate,medium projection – UN WPP” [dataset]. United Nations, “World Population Prospects” [original data].
 Source: UN, World Population Prospects (2024) – processed by Our World In Data
 
 ### What you should know about this data
