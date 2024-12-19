@@ -25,11 +25,10 @@ body {
 
 /* Slider Container */
 #slider-container {
-    margin-top: 15px;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     /* Prevent overflow */
     width: 100%;
     box-sizing: border-box;
@@ -77,6 +76,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
     margin: 15px 0;
     flex-wrap: wrap;
     /* Prevent overflow */
@@ -121,9 +121,8 @@ body {
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     #controls {
-        flex-direction: column;
         align-items: center;
-        margin: 10px 0;
+        margin: 0px 0;
     }
 
     #controls label {
@@ -131,24 +130,60 @@ body {
     }
 
     #slider-container {
-        flex-direction: column;
         align-items: center;
-    }
-
-    #slider-container input[type="range"] {
-        width: 100%;
-        margin-top: 5px;
     }
 
     #slider-container label,
     #slider-container span {
-        margin-top: 5px;
+        margin-top: 0px;
     }
 
     #my_dataviz {
-        padding: 10px;
+        padding: 0;
         /* Reduce padding for smaller screens */
         width: 95%;
         /* Adjust chart width */
     }
+}
+
+#timeRange {
+    width: 90%;
+    max-width: 500px;
+    margin: 10px 0;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: #ddd;
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease;
+}
+
+#timeRange::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00aaff;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#timeRange::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00aaff;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#timeRange::-ms-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00aaff;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }

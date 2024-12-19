@@ -36,7 +36,15 @@ Figure 3:
 - Revise the hover in figure 2 - OK
 
 - Do the figure 4 - OK
-- Do the figure 5
+- Do the figure 5 - OK
+
+- Generate the new website with HTML, JS, CSS - OK
+- Choose the way to show chart.  - OK
+- Resizable chart. - OK
+- Add the chart from ourworldata. - OK
 
 - Qualify the chart for the same visual - 
-- Find the dashboard - Design the dashboard
+- Make the donwload dataset features and the embeded features and share features
+- Make fullscreen view
+- Make the introduction
+- Make the group analysis
