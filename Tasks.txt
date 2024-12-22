@@ -44,8 +44,12 @@ Figure 3:
 - Add the chart from ourworldata. - OK
 
 - Qualify the chart for the same visual - OK
-- Make the chart of ourworldata hide some information
-- Make the donwload dataset features and the embeded features and share features
-- Make fullscreen view
-- Make the introduction
-- Make the group analysis
+- Make the chart of ourworldata hide some information - OK
+- Make the donwload dataset features and the embeded features and share features - OK
+- Make fullscreen view - OK
+- Make the introduction - OK 
+- Make the group analysis - OK  (Script)
+
+- Learn the Script
+- Check the describe on the screen
+

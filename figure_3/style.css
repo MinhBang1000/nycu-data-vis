@@ -155,3 +155,28 @@ p {
 .line:hover {
     stroke-width: 3;
 }
+
+/* Slider Container */
+#slider-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    /* Prevent overflow */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#slider-container input[type="range"] {
+    margin: 0 10px;
+    width: 300px;
+}
+
+#slider-container label,
+#slider-container span {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    /* Keep elements centered */
+}

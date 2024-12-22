@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,18 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
+
 <body>
     <div class="chart-container">
         <svg></svg>
+        <!-- Range slider -->
+        <div id="slider-container">
+            <span id="timeLabel">Year: 1950 - 2023</span>
+            <input type="range" id="timeRange" min="1950" max="2023" step="1" value="2023" />
+        </div>
     </div>
+
     <script src="script.js"></script>
 </body>
+
 </html>
