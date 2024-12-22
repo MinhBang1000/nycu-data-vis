@@ -64,13 +64,12 @@ const tooltip = d3.select("body").append("div")
 year = 2023;
 
 const slider = document.getElementById('year-slider');
+const playButton = document.getElementById("play-button");
 const currentYearDisplay = document.getElementById('current-year');
 
-slider.addEventListener('input', function () {
-    year = +slider.value;
-    currentYearDisplay.textContent = year;
-    updateMapForYear(year);
-});
+let interval; // To store the animation interval
+let isPlaying = false; // To track the play/pause state
+
 
 function updateMapForYear(selectedYear) {
     d3.csv(worldpopulationdesity).then(rawData => {
@@ -91,6 +90,44 @@ function updateMapForYear(selectedYear) {
         console.error("Error updating data for year:", error);
     });
 }
+
+slider.addEventListener('input', function () {
+    year = +slider.value;
+    currentYearDisplay.textContent = year;
+    updateMapForYear(year);
+});
+
+// Function to play/pause the animation
+function togglePlay() {
+    if (isPlaying) {
+        clearInterval(interval);
+        playButton.textContent = "Play";
+    } else {
+        playButton.textContent = "Pause";
+        slider.value = 1950
+        interval = setInterval(() => {
+            let currentYear = +slider.value;
+            if (currentYear < +slider.max) {
+                currentYear+=10;
+                if (currentYear>2023){
+                    currentYear = 2023
+                }
+            } else {
+                clearInterval(interval); // Stop animation at max year
+                playButton.textContent = "Play";
+                isPlaying = false;
+                return;
+            }
+            slider.value = currentYear;
+            currentYearDisplay.textContent = currentYear;
+            updateMapForYear(currentYear);
+        }, 500); // Adjust the interval duration for speed
+    }
+    isPlaying = !isPlaying;
+}
+
+// Add event listener to play button
+playButton.addEventListener("click", togglePlay);
 
 svg.append("rect")
     .attr("class", "background")
