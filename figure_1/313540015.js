@@ -220,10 +220,6 @@ let tooltipcontent = (countryName, populationDensity, year, countryCode, filtere
                 <span style="font-weight: 600;">Population Density:</span> 
                 <span>${populationDensity} people/km²</span>
             </div>
-            <div style="font-size: 14px; margin-bottom: 6px;">
-                <span style="font-weight: 600;">Year:</span> 
-                <span>${year}</span>
-            </div>
             <div id="chart-container" style="margin-top: 10px; width: 220px; height: 100px; background: #eef2f3; border: 1px dashed #ccc; border-radius: 4px; display: flex; justify-content: center; align-items: center;">
             </div>
         </div>
